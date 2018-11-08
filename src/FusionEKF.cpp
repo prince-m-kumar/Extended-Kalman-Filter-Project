@@ -37,6 +37,31 @@ FusionEKF::FusionEKF() {
     * Set the process and measurement noises
   */
 
+    // measurement function matrix - laser
+    H_laser_ << 1, 0, 0, 0,
+            0, 1, 0, 0;
+     //state covariance matrix: low values for high certainity
+    MatrixXd P_ = MatrixXd(4, 4);
+    P_ << 1, 0, 0, 0,
+            0, 1, 0, 0,
+            0, 0, 1000, 0,
+            0, 0, 0, 1000;
+     // state transition matrix
+    MatrixXd F_ = MatrixXd(4, 4);
+    F_ << 1, 0, 1, 0,
+            0, 1, 0, 1,
+            0, 0, 1, 0,
+            0, 0, 0, 1;
+     // new covariance matrix based on noise vector
+    MatrixXd Q_ = MatrixXd(4, 4);
+    Q_ << 1, 0, 1, 0,
+            0, 1, 0, 1,
+            1, 0, 1, 0,
+            0, 1, 0, 1;
+     VectorXd x_ = VectorXd(4);
+    x_ << 1, 1, 1, 1;
+    ekf_.Init(x_, P_, F_, H_laser_, R_laser_, Q_);
+
 
 }
 
